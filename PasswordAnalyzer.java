@@ -1,45 +1,51 @@
-package arunsProjects;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
-import java.util.Scanner;
+public class PasswordAnalyzer{
+    public static String assessPasswordStrength(String password) {
+        // Check password length
+        if (password.length() < 8) {
+            return "Weak - Password is too short";
+        }
 
-public class PasswordAnalyzer
-{
-   @SuppressWarnings("resource")
-public static void main(String[] args)
-   {
-      int passwordLength=8, upChars=0, lowChars=0;
-      int special=0, digits=0;
-      char ch;
-      Scanner s = new Scanner(System.in);
-      
-      System.out.print("Enter the Password: ");
-      String password = s.nextLine();
-      
-      int total = password.length();
-      if(total<passwordLength)
-      {
-         System.out.println("\nThe Password is invalid!");
-         return;
-      }
-      else
-      {
-         for(int i=0; i<total; i++)
-         {
-            ch = password.charAt(i);
-            if(Character.isUpperCase(ch))
-               upChars = 1;
-            else if(Character.isLowerCase(ch))
-               lowChars = 1;
-            else if(Character.isDigit(ch))
-               digits = 1;
-            else
-               special = 1;
-         }
-      }
-      if(upChars==1 && lowChars==1 && digits==1 && special==1)
-         System.out.println("\nThe Password is Strong.");
-      else
-         System.out.println("\nThe Password is Weak.");
-      s.close();
-   }
+        // Check for common password patterns
+        String[] commonPatterns = {
+            "(?i)password",
+            "(?i)123456",
+            "(?i)qwerty",
+            "(?i)abcdef",
+            "(?i)p@ssw0rd"
+        };
+        for (String pattern : commonPatterns) {
+            Pattern compiledPattern = Pattern.compile(pattern);
+            Matcher matcher = compiledPattern.matcher(password);
+            if (matcher.find()) {
+                return "Weak - Password is too common";
+            }
+        }
+
+        // Check for complexity
+        if (!Pattern.compile("[a-z]").matcher(password).find()) {
+            return "Weak - Password must contain at least one lowercase letter";
+        }
+        if (!Pattern.compile("[A-Z]").matcher(password).find()) {
+            return "Weak - Password must contain at least one uppercase letter";
+        }
+        if (!Pattern.compile("[0-9]").matcher(password).find()) {
+            return "Weak - Password must contain at least one digit";
+        }
+        if (!Pattern.compile("[^A-Za-z0-9]").matcher(password).find()) {
+            return "Weak - Password must contain at least one special character";
+        }
+
+        // If all checks pass, the password is considered strong
+        return "Strong";
+    }
+
+    public static void main(String[] args) {
+        String password = "MyStrongPassword!";
+        String result = assessPasswordStrength(password);
+        System.out.println(result);
+    }
 }
+
